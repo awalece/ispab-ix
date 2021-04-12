@@ -1,0 +1,29 @@
+mkdir /etc/bird/v4_peers/
+cd /etc/bird/v4_peers
+
+# Create file for new member
+
+vi as100_memberX
+
+#
+function as200_prefix_v6() {
+  return net ~ [
+    2001:200::/32{32,48},
+    2001:db8:b::/48
+];
+}
+protocol bgp AS200 from ispabix_v6 {
+  description "AS200_ISP IPv6 Peering";
+  neighbor 2407:840::20 as 200;
+  password "abcd1234";
+  import filter {
+    if as200_prefix_v6() then {
+      accept;
+    }
+    reject;
+  };
+}
+
+# Reload bird (DO NOT "restart" bird)
+
+systemctl reload bird6

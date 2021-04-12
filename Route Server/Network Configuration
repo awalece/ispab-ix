@@ -1,0 +1,23 @@
+Note:
+X = 1 for RS1
+X = 2 for RS2
+*************
+
+vi /etc/netplan/netcfg.yaml
+
+network:
+  version: 2
+  renderer: NetworkManager
+  ethernets:
+    eth0:
+      accept-ra: no
+      addresses:
+              - 103.161.216.X/23
+              - 2407:840::X/64
+    eth1:
+      addresses:
+              - 10.0.0.X/24
+      gateway4: 10.0.0.254
+      nameservers:
+              addresses:
+                      - 8.8.8.8

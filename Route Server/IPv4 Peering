@@ -1,0 +1,29 @@
+mkdir /etc/bird/v4_peers/
+cd /etc/bird/v4_peers
+
+# Create file for new member
+
+vi as100_memberX
+
+#
+function as100_prefix_v4() {
+  return net ~ [
+    172.16.0.0/22{22,24},
+    192.168.0.0/24
+];
+}
+protocol bgp AS100 from ispabix_v4 {
+  description "AS100_ISP IPv4 Peering"
+  neighbor 103.161.216.10 as 100;
+  password "abcd1234";
+  import filter {
+    if as100_prefix_v4() then {
+      accept;
+    }
+    reject;
+  };
+}
+
+# Reload bird (DO NOT "restart" bird)
+
+systemctl reload bird

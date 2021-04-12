@@ -1,0 +1,44 @@
+$ birdc
+BIRD 1.6.8 ready.
+bird> configure # reload configuration
+Reading configuration from /etc/bird.conf
+Reconfigured
+bird> show  ? # Completions work either by pressing tab or pressing '?'
+show bfd ...                                   Show information about BFD protocol
+show interfaces                                Show network interfaces
+show memory                                    Show memory usage
+show ospf ...                                  Show information about OSPF protocol
+show protocols [<protocol> | "<pattern>"]      Show routing protocols
+show roa ...                                   Show ROA table
+show route ...                                 Show routing table
+show static [<name>]                           Show details of static protocol
+show status                                    Show router status
+show symbols ...                               Show all known symbolic names
+bird> show protocols # this command shows your peering status
+name     proto    table    state  since       info
+device1  Device   master   up     07:20:25    
+kernel1  Kernel   master   up     07:20:25    
+chelnok  BGP      master   up     07:20:29    Established   
+hax404   BGP      master   up     07:20:26    Established     
+static1  Static   master   up     07:20:25
+bird> show protocols all chelnok # show verbose peering status for peering with chelnok
+bird> show route for 172.22.141.181 # show possible routes to internal.dn42
+172.22.141.0/24    via 172.23.67.1 on tobee [tobee 07:20:30] * (100) [AS64737i]
+                   via 172.23.64.1 on chelnok [chelnok 07:20:29] (100) [AS64737i]
+                   via 172.23.136.65 on hax404 [hax404 07:20:26] (100) [AS64737i]
+bird> show route filtered # shows routed filtered out by rules
+172.23.245.1/32    via 172.23.64.1 on chelnok [chelnok 21:26:18] * (100) [AS76175i]
+172.22.247.128/32  via 172.23.64.1 on chelnok [chelnok 21:26:18] * (100) [AS76175i]
+172.22.227.1/32    via 172.23.64.1 on chelnok [chelnok 21:26:18] * (100) [AS76115i]
+172.23.196.75/32   via 172.23.64.1 on chelnok [chelnok 21:26:18] * (100) [AS76115i]
+172.22.41.241/32   via 172.23.64.1 on chelnok [chelnok 21:26:18] * (100) [AS76115i]
+172.22.249.4/30    via 172.23.64.1 on chelnok [chelnok 21:26:18] * (100) [AS4242420002i]
+172.22.255.133/32  via 172.23.64.1 on chelnok [chelnok 21:26:18] * (100) [AS64654i]
+bird> show route protocol <somepeer> # shows the route they export to you
+bird> show route export <somepeer> # shows the route you export to someone
+
+bird> show protocols bgp1   #shows bgp peer summary
+bird> show protocols all bgp1   #shows detail information of bgp
+
+bird> show route
+bird> show route count

@@ -1,0 +1,30 @@
+# Enable ufw
+
+ufw enable
+
+# Enable firewall for IPv6 along with IPv4. Default should be at /etc/default/ufw
+
+IPV6=YES
+DEFAULT_INPUT_POLICY="DROP"
+DEFAULT_OUTPUT_POLICY="ACCEPT"
+DEFAULT_FORWARD_POLICY="DROP"
+
+# If not, change the default with the following command:
+
+ufw default deny incoming
+ufw default allow outgoing
+ufw default deny forwarding
+
+
+# To allow ICMP edit /etc/ufw/before.rules
+
+-A ufw-before-input -p icmp --icmp-type echo-request -j ACCEPT
+
+
+# Allow BGP connection request from IX members:
+
+ufw allow in on ens18 from 103.161.216.0/23 to any port 179/tcp
+
+# Allow SSH for MGMT interface
+
+ufw allow in on ens20 from 10.0.0.0/24 to any port 22/tcp

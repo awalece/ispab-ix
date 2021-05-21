@@ -4,3 +4,16 @@
 10.0.0.0/24 = MGMT LAN (VLAN 20)
 10.0.1.0/24 = INT LAN (VLAN 21)
 10.0.2.0/24 = CSTR LAN (VLAN 22)
+
+# MGMT access to Proxmox controller nodes
+https://10.0.0.5:8006/
+Node-1 10.0.0.5
+Node-2 10.0.0.6
+
+# MGMT access to route servers
+RS1: 10.0.0.1
+RS2: 10.0.0.2
+
+# MGMT access to IX Switches
+SW1:
+SW2:

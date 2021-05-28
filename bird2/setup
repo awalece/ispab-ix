@@ -1,1 +1,7 @@
 $ sudo apt install bird2
+
+$ cd /etc/bird
+$ cp -p bird.conf bird.conf.bak
+
+$ sudo systemctl start bird
+$ sudo systemctl enable bird

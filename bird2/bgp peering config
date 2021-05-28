@@ -1,0 +1,27 @@
+$ vi /etc/bird/peers/rs2 -p
+
+###### RS1-RS2 Peering Configuration ######
+
+protocol bgp RS2_v4 from ispabix_v4 {
+        description "IPv4 Peering with RS2";
+        neighbor 103.161.216.2 as 141467;
+        password "abcd1234";
+        ipv4 {
+              import filter accept_all_in;
+              export filter accept_all_in;
+        };
+}
+
+protocol bgp RS2_v6 from ispabix_v6 {
+        description "IPv6 Peering with RS2";
+        neighbor 2407:840::2 as 141467;
+        password "abcd1234";
+        ipv6 {
+              import filter accept_all_in;
+              export filter accept_all_in;
+
+        };
+}
+
+
+$ sudo chown -R bird:bird /etc/bird/peers

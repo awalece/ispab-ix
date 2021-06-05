@@ -45,7 +45,7 @@ filter as100_in {
   reject_small_prefixes_v6();
   reject_default_route_v4();
   reject_default_route_v6();
-  as100_prefix_filter()
+  as100_prefix_filter();
   honor_graceful_shutdown();
   accept;
 }

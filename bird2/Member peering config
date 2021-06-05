@@ -1,8 +1,43 @@
+define AS100_ALL = [
+  100,
+  200,
+  300 ];
+
+define AS100_PREFIXES = [
+  172.16.0.0/22{22,24},
+  192.168.0.0/24,
+  2001:db8::/32 ];
+
+function as100_prefix_filter()
+prefix set as100_prefixes;
+int set as100_all;
+{
+  as100_all = AS100_ALL;
+  as100_prefixes = AS100_PREFIXES;
+  
+  if (bgp_path.first != 100 ) then {
+    reject;
+  }
+  
+  if ! (bgp_path.last ~ as100_all) then {
+    reject;
+  }
+  
+  if ! (net ~ as100_prefixes) then {
+    reject;
+  } 
+  
+  if bgp_next_hop != from then {
+    reject;
+  }
+  
+  accept;
+}
 
 
 
 filter ixp_in {
-  reject_invalids();
+#  reject_invalids();
   reject_bogon_asns();
   reject_bogon_prefixes_v4();
   reject_bogon_prefixes_v6();
@@ -10,6 +45,7 @@ filter ixp_in {
   reject_small_prefixes_v6();
   reject_default_route_v4();
   reject_default_route_v6();
+  as100_prefix_filter()
   honor_graceful_shutdown();
   accept;
 }

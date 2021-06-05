@@ -36,7 +36,7 @@ int set as100_all;
 
 
 
-filter ixp_in {
+filter as100_in {
 #  reject_invalids();
   reject_bogon_asns();
   reject_bogon_prefixes_v4();

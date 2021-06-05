@@ -122,3 +122,19 @@ function reject_small_prefixes_v6()
     reject;
   }
 }
+
+# RPKI Based Filter
+
+function reject_rpki_invalids_v4()
+{
+  if (roa_check(roa_v4, net, bgp_path.last) = ROA_INVALID)  then {
+        reject;
+  }
+}
+
+function reject_rpki_invalids_v6()
+{
+  if (roa_check(roa_v6, net, bgp_path.last) = ROA_INVALID)  then {
+        reject;
+  }
+}

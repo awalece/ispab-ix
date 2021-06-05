@@ -37,8 +37,9 @@ bird> show route filtered # shows routed filtered out by rules
 bird> show route protocol <somepeer> # shows the route they export to you
 bird> show route export <somepeer> # shows the route you export to someone
 
-bird> show protocols bgp1   #shows bgp peer summary
-bird> show protocols all bgp1   #shows detail information of bgp
+birdc> show protocols bgp1   #shows bgp peer summary
+birdc> show protocols all bgp1   #shows detail information of bgp
 
-bird> show route
-bird> show route count
+birdc> show route
+birdc> show route count
+birdc> show route table roa_v4

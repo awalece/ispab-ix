@@ -1,0 +1,15 @@
+
+
+
+filter ixp_in {
+  reject_invalids();
+  reject_bogon_asns();
+  reject_bogon_prefixes_v4();
+  reject_bogon_prefixes_v6();
+  reject_small_prefixes_v4();
+  reject_small_prefixes_v6();
+  reject_default_route_v4();
+  reject_default_route_v6();
+  honor_graceful_shutdown();
+  accept;
+}

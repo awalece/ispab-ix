@@ -3,17 +3,20 @@ define AS100_ALL = [
   200,
   300 ];
 
-define AS100_PREFIXES = [
+define AS100_PREFIXES_v4 = [
   172.16.0.0/22{22,24},
-  192.168.0.0/24,
-  2001:db8::/32 ];
+  192.168.0.0/24 ];
+  
+define AS100_PREFIXES_v6 = [
+  2001:db8::/32;
+  2001:db9::/32{32,48} ];
 
-function as100_prefix_filter()
-prefix set as100_prefixes;
+function as100_prefix_filter_v4()
+prefix set as100_prefixes_v4;
 int set as100_all;
 {
   as100_all = AS100_ALL;
-  as100_prefixes = AS100_PREFIXES;
+  as100_prefixes_v4 = AS100_PREFIXES_v4;
   
   if (bgp_path.first != 100 ) then {
     reject;
@@ -23,7 +26,7 @@ int set as100_all;
     reject;
   }
   
-  if ! (net ~ as100_prefixes) then {
+  if ! (net ~ as100_prefixes_v4) then {
     reject;
   } 
   
@@ -34,18 +37,76 @@ int set as100_all;
   accept;
 }
 
+function as100_prefix_filter_v6()
+prefix set as100_prefixes_v6;
+int set as100_all;
+{
+  as100_all = AS100_ALL;
+  as100_prefixes_v6 = AS100_PREFIXES_v6;
+  
+  if (bgp_path.first != 100 ) then {
+    reject;
+  }
+  
+  if ! (bgp_path.last ~ as100_all) then {
+    reject;
+  }
+  
+  if ! (net ~ as100_prefixes_v6) then {
+    reject;
+  } 
+  
+  if bgp_next_hop != from then {
+    reject;
+  }
+  
+  accept;
+}
 
+# Inbound filter rules for member
 
-filter as100_in {
-#  reject_invalids();
+filter as100_in_v4 {
+  reject_rpki_invalids_v4();
   reject_bogon_asns();
   reject_bogon_prefixes_v4();
-  reject_bogon_prefixes_v6();
   reject_small_prefixes_v4();
-  reject_small_prefixes_v6();
   reject_default_route_v4();
-  reject_default_route_v6();
-  as100_prefix_filter();
+  as100_prefix_filter_v4();
   honor_graceful_shutdown();
   accept;
 }
+
+filter as100_in_v6 {
+  reject_rpki_invalids_v6;
+  reject_bogon_asns();
+  reject_bogon_prefixes_v6();
+  reject_small_prefixes_v6();
+  reject_default_route_v6();
+  as100_prefix_filter_v6();
+  honor_graceful_shutdown();
+  accept;
+}
+
+# BGP configuration for member
+
+protocol bgp ISP_ASN_v4 from ispabix_v4 {
+        description "IPv4 Peering with ISP Name";
+        neighbor <Neighbor_IPv4> as <Remote_AS>;
+        password "abcd1234";
+        ipv4 {
+              import filter as100_in_v4;
+              export all;
+        };
+}
+
+protocol bgp ISP_ASN_v6 from ispabix_v6 {
+        description "IPv6 Peering with ISP Name";
+        neighbor <Neighbor_IPv6> as <Remote_AS>;
+        password "abcd1234";
+        ipv6 {
+              import filter as100_in_v6;
+              export all;
+        };
+}
+
+
